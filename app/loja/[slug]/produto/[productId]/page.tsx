@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import ProductCustomizer from "./ProductCustomizer";
 
@@ -35,6 +36,16 @@ export default async function ProdutoPage({ params }: PageProps) {
 
   const supabase = await createClient();
 
+  const { data: store, error: storeError } = await supabase
+    .from("stores")
+    .select("id")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (storeError || !store) {
+    notFound();
+  }
+
   const { data: product } = await supabase
     .from("products")
     .select(`
@@ -46,6 +57,7 @@ export default async function ProdutoPage({ params }: PageProps) {
       is_available
     `)
     .eq("id", productId)
+    .eq("store_id", store.id)
     .single();
 
   if (!product || !product.is_available) {
