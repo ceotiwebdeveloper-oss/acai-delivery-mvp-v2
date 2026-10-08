@@ -12,6 +12,7 @@ type CartItem = {
   quantity: number;
   basePrice: number;
   selected: Record<string, unknown>;
+  selectedOptionIds?: string[];
   total: number;
 };
 
