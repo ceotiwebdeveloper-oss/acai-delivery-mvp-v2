@@ -276,12 +276,17 @@ export default function CheckoutPage({ params }: PageProps) {
                 {
                   value: "pix",
                   label: "PIX",
-                  description: "Pagamento instantâneo",
+                  description: "QR Code demonstrativo para testes",
                 },
                 {
-                  value: "card",
-                  label: "Cartão",
-                  description: "Débito ou crédito",
+                  value: "debit_card",
+                  label: "Cartão de débito",
+                  description: "Pagamento com cartão de débito",
+                },
+                {
+                  value: "credit_card",
+                  label: "Cartão de crédito",
+                  description: "Pagamento com cartão de crédito",
                 },
                 {
                   value: "cash",
@@ -293,11 +298,12 @@ export default function CheckoutPage({ params }: PageProps) {
                   key={method.value}
                   type="button"
                   onClick={() => setPaymentMethod(method.value)}
-                  className={`flex w-full items-center justify-between rounded-2xl border p-4 text-left ${
+                  className={`flex w-full items-center justify-between rounded-2xl border p-4 text-left transition-colors ${
                     paymentMethod === method.value
                       ? "border-zinc-950 bg-zinc-50"
                       : "border-zinc-300 bg-white"
                   }`}
+                  aria-pressed={paymentMethod === method.value}
                 >
                   <div>
                     <p className="font-bold text-zinc-950">{method.label}</p>
@@ -307,6 +313,7 @@ export default function CheckoutPage({ params }: PageProps) {
                   </div>
 
                   <span
+                    aria-hidden="true"
                     className={`h-5 w-5 shrink-0 rounded-full border-2 ${
                       paymentMethod === method.value
                         ? "border-zinc-950 bg-zinc-950"
@@ -315,6 +322,32 @@ export default function CheckoutPage({ params }: PageProps) {
                   />
                 </button>
               ))}
+
+              {paymentMethod === "pix" && (
+                <div className="mt-4 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-center">
+                  <span className="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-amber-800">
+                    Modo de teste
+                  </span>
+                  <h3 className="mt-3 font-bold text-zinc-950">
+                    QR Code Pix demonstrativo
+                  </h3>
+                  <img
+                    src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=DEMO-PIX-NAO-REAL-NAO-PAGAR"
+                    alt="QR Code demonstrativo de teste, sem cobrança real"
+                    width={220}
+                    height={220}
+                    className="mx-auto mt-3 rounded-xl border border-amber-200 bg-white p-2"
+                  />
+                  <p className="mt-3 text-sm font-semibold text-amber-900">
+                    Este QR Code é apenas ilustrativo. Não transfere dinheiro e
+                    não confirma pagamentos.
+                  </p>
+                  <p className="mt-1 text-xs text-amber-800">
+                    O Pix automático real será ativado quando a integração com
+                    um provedor de pagamentos estiver configurada.
+                  </p>
+                </div>
+              )}
             </div>
           </section>
 
