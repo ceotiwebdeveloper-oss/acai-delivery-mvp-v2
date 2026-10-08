@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import CartBar from "./CartBar";
+import StoreHeaderActions from "./StoreHeaderActions";
 
 export const instant = false;
 
@@ -60,44 +61,14 @@ export default async function LojaPage({ params }: PageProps) {
       <div className="mx-auto min-h-screen max-w-md bg-white pb-24 shadow-sm">
 
         {/* HEADER */}
-        <header className="sticky top-0 z-20 border-b bg-white/95 px-5 py-4 backdrop-blur">
-          <div className="flex items-center justify-between">
-            <button
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-lg text-white shadow-sm transition hover:bg-zinc-800"
-              aria-label="Abrir menu"
-            >
-              ☰
-            </button>
-
-            <div className="text-center">
-              <h1 className="text-sm font-bold text-zinc-900">
-                {store.name}
-              </h1>
-
-              <div className="mt-1 flex items-center justify-center gap-1.5">
-                <span
-                  className={`h-2 w-2 rounded-full ${
-                    store.is_open ? "bg-emerald-500" : "bg-red-500"
-                  }`}
-                />
-
-                <span className="text-xs text-zinc-500">
-                  {store.is_open ? "Aberta agora" : "Fechada"}
-                </span>
-              </div>
-            </div>
-
-            <button
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-lg text-white shadow-sm transition hover:bg-zinc-800"
-              aria-label="Pesquisar"
-            >
-              ⌕
-            </button>
-          </div>
-        </header>
+        <StoreHeaderActions
+          storeName={store.name}
+          isOpen={store.is_open}
+          categories={categories.map((category) => ({ id: category.id, name: category.name }))}
+        />
 
         {/* APRESENTAÇÃO */}
-        <section className="px-5 pb-5 pt-6">
+        <section id="inicio" className="px-5 pb-5 pt-6">
           <p className="mb-2 text-sm font-medium text-zinc-500">
             Bem-vindo 👋
           </p>
@@ -150,6 +121,7 @@ export default async function LojaPage({ params }: PageProps) {
             return (
               <section
                 key={category.id}
+                data-product-category
                 id={`categoria-${category.id}`}
                 className="mb-9 scroll-mt-36"
               >
@@ -167,6 +139,7 @@ export default async function LojaPage({ params }: PageProps) {
                   {products.map((product) => (
                     <Link
                       key={product.id}
+                      data-product-name={product.name.toLocaleLowerCase("pt-BR")}
                       href={`/loja/${slug}/produto/${product.id}`}
                       className="group overflow-hidden rounded-3xl border border-zinc-100 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]"
                     >
