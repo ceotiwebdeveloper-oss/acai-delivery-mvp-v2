@@ -108,7 +108,20 @@ export default function ProductCustomizer({
       productName,
       quantity,
       basePrice,
-      selected,
+      selected: Object.fromEntries(
+        optionGroups
+          .map((group) => [
+            group.name,
+            group.options
+              .filter((option) => (selected[group.id] ?? []).includes(option.id))
+              .map((option) => ({
+                id: option.id,
+                name: option.name,
+                price: Number(option.price),
+              })),
+          ])
+          .filter(([, options]) => Array.isArray(options) && options.length > 0)
+      ),
       total,
     };
 
