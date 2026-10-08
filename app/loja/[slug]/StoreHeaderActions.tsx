@@ -55,13 +55,13 @@ export default function StoreHeaderActions({ storeName, slug, isOpen, categories
         >⌕</button>
       </div>
       {menuOpen && (
-        <nav aria-label="Menu da loja" className="mt-4 rounded-2xl border border-zinc-200 bg-white p-3 shadow-lg">
-          <a onClick={() => setMenuOpen(false)} href="#inicio" className="block rounded-xl px-3 py-2 text-sm font-medium hover:bg-zinc-100">Início</a>
-          <p className="px-3 pb-1 pt-3 text-xs font-semibold uppercase tracking-wide text-zinc-400">Categorias</p>
+        <nav aria-label="Menu da loja" className="mt-4 rounded-2xl border border-zinc-200 bg-white p-3 text-zinc-950 shadow-lg">
+          <a onClick={() => setMenuOpen(false)} href="#inicio" className="block rounded-xl px-3 py-2 text-sm font-medium text-zinc-950 hover:bg-zinc-100">Início</a>
+          <p className="px-3 pb-1 pt-3 text-xs font-semibold uppercase tracking-wide text-zinc-700">Categorias</p>
           {categories.map((category) => (
-            <a key={category.id} onClick={() => setMenuOpen(false)} href={`#categoria-${category.id}`} className="block rounded-xl px-3 py-2 text-sm hover:bg-zinc-100">{category.name}</a>
+            <a key={category.id} onClick={() => setMenuOpen(false)} href={`#categoria-${category.id}`} className="block rounded-xl px-3 py-2 text-sm text-zinc-950 hover:bg-zinc-100">{category.name}</a>
           ))}
-          <a onClick={() => setMenuOpen(false)} href={`/loja/${slug}/carrinho`} className="mt-2 block rounded-xl px-3 py-2 text-sm font-medium hover:bg-zinc-100">Meu carrinho</a>
+          <a onClick={() => setMenuOpen(false)} href={`/loja/${slug}/carrinho`} className="mt-2 block rounded-xl px-3 py-2 text-sm font-medium text-zinc-950 hover:bg-zinc-100">Meu carrinho</a>
         </nav>
       )}
       {searchOpen && (
