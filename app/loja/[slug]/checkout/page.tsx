@@ -115,54 +115,37 @@ export default function CheckoutPage({ params }: PageProps) {
         throw new Error("Loja não encontrada.");
       }
 
-      const orderId = crypto.randomUUID();
-
-      const orderPayload = {
-        id: orderId,
-        store_id: store.id,
-        customer_name: name.trim(),
-        customer_phone: phone.trim(),
-        delivery_type: deliveryType,
-        address: deliveryType === "delivery" ? address.trim() : null,
-        address_number:
-          deliveryType === "delivery" ? addressNumber.trim() : null,
-        complement:
-          deliveryType === "delivery" && complement.trim()
-            ? complement.trim()
-            : null,
-        payment_method: paymentMethod,
-        notes: notes.trim() || null,
-        subtotal,
-        delivery_fee: deliveryFee,
-        total,
-        status: "pending",
-      };
-
-      const { error: orderError } = await supabase
-        .from("orders")
-        .insert(orderPayload);
+      const { data: orderId, error: orderError } = await supabase.rpc(
+        "create_customer_order",
+        {
+          p_store_slug: slug,
+          p_customer_name: name.trim(),
+          p_customer_phone: phone.trim(),
+          p_delivery_type: deliveryType,
+          p_address: deliveryType === "delivery" ? address.trim() : null,
+          p_address_number: deliveryType === "delivery" ? addressNumber.trim() : null,
+          p_complement:
+            deliveryType === "delivery" && complement.trim()
+              ? complement.trim()
+              : null,
+          p_payment_method: paymentMethod,
+          p_notes: notes.trim() || null,
+          p_items: cart.map((item) => ({
+            product_id: item.productId,
+            quantity: Number(item.quantity),
+            selected_option_ids: Array.isArray(item.selectedOptionIds)
+              ? item.selectedOptionIds
+              : [],
+          })),
+        }
+      );
 
       if (orderError) {
         throw new Error(`Erro ao criar pedido: ${orderError.message}`);
       }
 
-      const orderItems = cart.map((item) => ({
-        order_id: orderId,
-        product_id: item.productId,
-        product_name: item.productName,
-        quantity: item.quantity,
-        unit_price: Number(item.total) / Number(item.quantity),
-        total: Number(item.total),
-        selected_options: item.selected ?? {},
-      }));
-
-      const { error: itemsError } = await supabase
-        .from("order_items")
-        .insert(orderItems);
-
-      if (itemsError) {
-        await supabase.from("orders").delete().eq("id", orderId);
-        throw new Error(`Erro ao salvar itens do pedido: ${itemsError.message}`);
+      if (typeof orderId !== "string" || !orderId) {
+        throw new Error("O banco não retornou o identificador do pedido.");
       }
 
       localStorage.removeItem("cart");
