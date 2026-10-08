@@ -73,7 +73,7 @@ function selectedOptionsText(value: unknown): string[] {
     });
   }
   if (typeof value === "object") {
-    return Object.entries(value as Record<string, unknown>).flatMap(([key, entry]) => {
+    return Object.entries(value as Record<string, unknown>).flatMap(([, entry]) => {
       if (typeof entry === "string" || typeof entry === "number") return [String(entry)];
       if (Array.isArray(entry)) return selectedOptionsText(entry);
       if (entry && typeof entry === "object") return selectedOptionsText(entry);
