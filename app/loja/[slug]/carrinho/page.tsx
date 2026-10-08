@@ -33,12 +33,11 @@ useEffect(() => {
   });
 
   const timer = window.setTimeout(() => {
-    const savedCart = JSON.parse(
-      localStorage.getItem("cart") ?? "[]"
-    );
-
-    if (mounted) {
-      setCart(savedCart);
+    try {
+      const savedCart: unknown = JSON.parse(localStorage.getItem("cart") ?? "[]");
+      if (mounted) setCart(Array.isArray(savedCart) ? savedCart as CartItem[] : []);
+    } catch {
+      if (mounted) setCart([]);
     }
   }, 0);
 
@@ -74,6 +73,7 @@ useEffect(() => {
 
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+    window.dispatchEvent(new Event("cart-updated"));
   }
 
   function removeItem(id: string) {
@@ -81,6 +81,7 @@ useEffect(() => {
 
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+    window.dispatchEvent(new Event("cart-updated"));
   }
 
   return (
