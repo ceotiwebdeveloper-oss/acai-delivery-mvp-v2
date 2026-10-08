@@ -1,4 +1,6 @@
-﻿import Link from "next/link";
+import Link from "next/link";
+import OrderActions from "@/app/admin/OrderActions";
+import AdminOrderRealtime from "@/app/admin/AdminOrderRealtime";
 import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
@@ -178,6 +180,10 @@ export default async function AdminPage() {
           </Link>
         </header>
 
+        <div className="mt-5">
+          <AdminOrderRealtime />
+        </div>
+
         {error && (
           <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
             Erro ao carregar pedidos: {error.message}
@@ -320,13 +326,7 @@ export default async function AdminPage() {
                         </p>
                       </div>
 
-                      <Link
-                        href={`/admin/pedidos/${order.id}/visualizar`}
-                        className="inline-flex items-center justify-center gap-2 rounded-xl bg-zinc-950 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-zinc-800"
-                      >
-                        VER INFORMAÇÕES
-                        <span>→</span>
-                      </Link>
+                      <OrderActions orderId={order.id} />
                     </div>
                   </div>
                 </div>
