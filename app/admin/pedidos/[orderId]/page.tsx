@@ -47,6 +47,7 @@ const paymentLabels: Record<string, string> = {
   pix: "PIX",
   credit_card: "Cartão de crédito",
   debit_card: "Cartão de débito",
+  card: "Cartão (débito/crédito)",
   cash: "Dinheiro",
 };
 
