@@ -6,11 +6,12 @@ type Category = { id: string; name: string };
 
 type Props = {
   storeName: string;
+  slug: string;
   isOpen: boolean;
   categories: Category[];
 };
 
-export default function StoreHeaderActions({ storeName, isOpen, categories }: Props) {
+export default function StoreHeaderActions({ storeName, slug, isOpen, categories }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -60,7 +61,7 @@ export default function StoreHeaderActions({ storeName, isOpen, categories }: Pr
           {categories.map((category) => (
             <a key={category.id} onClick={() => setMenuOpen(false)} href={`#categoria-${category.id}`} className="block rounded-xl px-3 py-2 text-sm hover:bg-zinc-100">{category.name}</a>
           ))}
-          <a onClick={() => setMenuOpen(false)} href="#carrinho" className="mt-2 block rounded-xl px-3 py-2 text-sm font-medium hover:bg-zinc-100">Meu carrinho</a>
+          <a onClick={() => setMenuOpen(false)} href={`/loja/${slug}/carrinho`} className="mt-2 block rounded-xl px-3 py-2 text-sm font-medium hover:bg-zinc-100">Meu carrinho</a>
         </nav>
       )}
       {searchOpen && (
