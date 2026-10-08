@@ -1,207 +1,140 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
+export const instant = false;
+
 type PageProps = {
-  params: Promise<{
-    orderId: string;
-  }>;
+  params: Promise<{ slug: string; orderId: string }>;
 };
 
-export default async function PedidoAdminPage({
-  params,
-}: PageProps) {
-  const { orderId } = await params;
+type Order = {
+  id: string;
+  customer_name: string;
+  customer_phone: string;
+  delivery_type: string;
+  address: string | null;
+  address_number: string | null;
+  complement: string | null;
+  payment_method: string;
+  notes: string | null;
+  subtotal: number;
+  delivery_fee: number;
+  total: number;
+  status: string;
+  created_at: string;
+};
 
+type OrderItem = {
+  id: string;
+  product_name: string;
+  quantity: number;
+  unit_price: number;
+  total: number;
+  selected_options: Record<string, unknown> | null;
+};
+
+type OrderLookup = { order: Order; items: OrderItem[] };
+
+const statusLabels: Record<string, string> = {
+  pending: "Recebido",
+  confirmed: "Confirmado",
+  preparing: "Em preparo",
+  out_for_delivery: "Saiu para entrega",
+  completed: "Concluído",
+  cancelled: "Cancelado",
+};
+
+const paymentLabels: Record<string, string> = {
+  pix: "PIX",
+  card: "Cartão (débito/crédito)",
+  credit_card: "Cartão de crédito",
+  debit_card: "Cartão de débito",
+  cash: "Dinheiro",
+};
+
+function money(value: number) {
+  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(value) || 0);
+}
+
+function optionsText(value: Record<string, unknown> | null) {
+  if (!value) return [];
+  return Object.entries(value).flatMap(([group, options]) => {
+    if (!Array.isArray(options)) return [];
+    return options.flatMap((option) => {
+      if (!option || typeof option !== "object") return [];
+      const item = option as Record<string, unknown>;
+      if (typeof item.name !== "string") return [];
+      const price = Number(item.price) > 0 ? ` (+${money(Number(item.price))})` : "";
+      return [`${group}: ${item.name}${price}`];
+    });
+  });
+}
+
+export default async function CustomerOrderPage({ params }: PageProps) {
+  await connection();
+  const { slug, orderId } = await params;
   const supabase = await createClient();
 
-  const { data: order, error } = await supabase
-    .from("orders")
-    .select("*")
-    .eq("id", orderId)
-    .single();
+  const { data, error } = await supabase.rpc("get_customer_order", {
+    p_order_id: orderId,
+  });
 
-  if (error || !order) {
-    return (
-      <main className="min-h-screen bg-zinc-100 p-6">
-        <div className="mx-auto max-w-3xl">
-          <Link
-            href="/admin"
-            className="text-sm font-bold text-zinc-600"
-          >
-            ← Voltar para pedidos
-          </Link>
+  if (error || !data || typeof data !== "object") notFound();
 
-          <div className="mt-6 rounded-2xl bg-white p-6 shadow-sm">
-            <h1 className="text-xl font-black text-zinc-950">
-              Pedido não encontrado
-            </h1>
-          </div>
-        </div>
-      </main>
-    );
-  }
+  const result = data as unknown as OrderLookup;
+  if (!result.order || result.order.id !== orderId) notFound();
 
-  const { data: items } = await supabase
-    .from("order_items")
-    .select("*")
-    .eq("order_id", orderId)
-    .order("created_at", { ascending: true });
+  const order = result.order;
+  const items = Array.isArray(result.items) ? result.items : [];
 
   return (
-    <main className="min-h-screen bg-zinc-100">
-      <header className="border-b border-zinc-200 bg-white">
-        <div className="mx-auto max-w-3xl px-5 py-4">
-          <Link
-            href="/admin"
-            className="text-sm font-bold text-zinc-600"
-          >
-            ← Voltar para pedidos
-          </Link>
+    <main className="min-h-screen bg-zinc-100 px-4 py-8 text-zinc-950">
+      <div className="mx-auto max-w-2xl">
+        <section className="rounded-3xl bg-white p-6 text-center shadow-sm sm:p-9">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-3xl text-emerald-700" aria-hidden="true">✓</div>
+          <p className="mt-5 text-xs font-bold uppercase tracking-[0.2em] text-emerald-700">Pedido recebido</p>
+          <h1 className="mt-2 text-3xl font-black">Obrigado, {order.customer_name}!</h1>
+          <p className="mt-3 text-sm leading-6 text-zinc-500">Seu pedido foi registrado. Guarde o número abaixo para consultar o pedido.</p>
+          <p className="mt-5 break-all rounded-xl bg-zinc-50 px-4 py-3 font-mono text-xs text-zinc-600">{order.id}</p>
+          <div className="mt-5 inline-flex rounded-full bg-orange-50 px-4 py-2 text-sm font-bold text-orange-800">Status: {statusLabels[order.status] ?? order.status}</div>
+        </section>
 
-          <h1 className="mt-3 text-2xl font-black text-zinc-950">
-            Pedido
-          </h1>
-
-          <p className="mt-1 break-all text-xs text-zinc-500">
-            {order.id}
-          </p>
-        </div>
-      </header>
-
-      <section className="mx-auto max-w-3xl space-y-5 px-5 py-6">
-        <div className="rounded-2xl bg-white p-5 shadow-sm">
-          <p className="text-xs font-bold uppercase tracking-wide text-zinc-500">
-            Cliente
-          </p>
-
-          <h2 className="mt-2 text-xl font-black text-zinc-950">
-            {order.customer_name}
-          </h2>
-
-          <p className="mt-2 text-sm font-medium text-zinc-700">
-            Telefone: {order.customer_phone}
-          </p>
-        </div>
-
-        <div className="rounded-2xl bg-white p-5 shadow-sm">
-          <p className="text-xs font-bold uppercase tracking-wide text-zinc-500">
-            Entrega
-          </p>
-
-          <p className="mt-3 font-bold text-zinc-950">
-            {order.delivery_type === "delivery"
-              ? "Entrega"
-              : "Retirada na loja"}
-          </p>
-
-          {order.delivery_type === "delivery" && (
-            <div className="mt-3 space-y-1 text-sm text-zinc-700">
-              <p>{order.address}</p>
-
-              <p>
-                Número: {order.address_number}
-              </p>
-
-              {order.complement && (
-                <p>
-                  Complemento: {order.complement}
-                </p>
-              )}
-            </div>
-          )}
-        </div>
-
-        <div className="rounded-2xl bg-white p-5 shadow-sm">
-          <p className="text-xs font-bold uppercase tracking-wide text-zinc-500">
-            Itens
-          </p>
-
-          <div className="mt-4 divide-y divide-zinc-200">
-            {(items ?? []).map((item) => (
-              <div
-                key={item.id}
-                className="flex items-center justify-between gap-4 py-4"
-              >
-                <div>
-                  <p className="font-bold text-zinc-950">
-                    {item.quantity}x {item.product_name}
-                  </p>
-
-                  <p className="mt-1 text-sm text-zinc-500">
-                    R${" "}
-                    {Number(item.unit_price)
-                      .toFixed(2)
-                      .replace(".", ",")}{" "}
-                    cada
-                  </p>
+        <section className="mt-5 rounded-3xl bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-black">Resumo do pedido</h2>
+          <div className="mt-4 divide-y divide-zinc-100">
+            {items.map((item) => {
+              const options = optionsText(item.selected_options);
+              return (
+                <div key={item.id} className="flex justify-between gap-4 py-4">
+                  <div>
+                    <p className="font-bold">{item.quantity}× {item.product_name}</p>
+                    {options.map((option, index) => <p key={index} className="mt-1 text-xs text-zinc-500">{option}</p>)}
+                    <p className="mt-1 text-xs text-zinc-500">Unitário: {money(item.unit_price)}</p>
+                  </div>
+                  <p className="shrink-0 font-bold">{money(item.total)}</p>
                 </div>
-
-                <p className="font-black text-zinc-950">
-                  R${" "}
-                  {Number(item.total)
-                    .toFixed(2)
-                    .replace(".", ",")}
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
-        </div>
-
-        <div className="rounded-2xl bg-white p-5 shadow-sm">
-          <p className="text-xs font-bold uppercase tracking-wide text-zinc-500">
-            Pagamento
-          </p>
-
-          <p className="mt-2 font-bold text-zinc-950">
-            {order.payment_method}
-          </p>
-
-          {order.notes && (
-            <div className="mt-5">
-              <p className="text-xs font-bold uppercase tracking-wide text-zinc-500">
-                Observação
-              </p>
-
-              <p className="mt-2 text-sm text-zinc-700">
-                {order.notes}
-              </p>
-            </div>
-          )}
-        </div>
-
-        <div className="rounded-2xl bg-zinc-950 p-5 text-white">
-          <div className="flex justify-between text-sm text-zinc-300">
-            <span>Subtotal</span>
-            <span>
-              R${" "}
-              {Number(order.subtotal)
-                .toFixed(2)
-                .replace(".", ",")}
-            </span>
+          <div className="space-y-2 border-t border-zinc-100 pt-4 text-sm">
+            <div className="flex justify-between"><span className="text-zinc-500">Subtotal</span><span className="font-semibold">{money(order.subtotal)}</span></div>
+            <div className="flex justify-between"><span className="text-zinc-500">Entrega</span><span className="font-semibold">{money(order.delivery_fee)}</span></div>
+            <div className="flex justify-between pt-2 text-base"><span className="font-black">Total</span><span className="font-black">{money(order.total)}</span></div>
           </div>
+        </section>
 
-          <div className="mt-2 flex justify-between text-sm text-zinc-300">
-            <span>Entrega</span>
-            <span>
-              R${" "}
-              {Number(order.delivery_fee)
-                .toFixed(2)
-                .replace(".", ",")}
-            </span>
-          </div>
+        <section className="mt-5 rounded-3xl bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-black">Entrega e pagamento</h2>
+          <p className="mt-3 text-sm text-zinc-600">{order.delivery_type === "delivery" ? "Entrega" : "Retirada na loja"}</p>
+          {order.delivery_type === "delivery" ? <p className="mt-1 text-sm text-zinc-600">{order.address}{order.address_number ? `, ${order.address_number}` : ""}{order.complement ? ` — ${order.complement}` : ""}</p> : null}
+          <p className="mt-2 text-sm text-zinc-600">Pagamento: {paymentLabels[order.payment_method] ?? order.payment_method}</p>
+          {order.notes ? <p className="mt-3 whitespace-pre-wrap text-sm text-zinc-600">Observação: {order.notes}</p> : null}
+        </section>
 
-          <div className="mt-4 flex justify-between border-t border-white/10 pt-4">
-            <span className="font-bold">Total</span>
-
-            <span className="text-xl font-black">
-              R${" "}
-              {Number(order.total)
-                .toFixed(2)
-                .replace(".", ",")}
-            </span>
-          </div>
-        </div>
-      </section>
+        <Link href={`/loja/${slug}`} className="mt-5 flex w-full items-center justify-center rounded-2xl bg-zinc-950 px-5 py-4 text-sm font-bold text-white transition hover:bg-zinc-800">Voltar para a loja</Link>
+      </div>
     </main>
   );
 }
