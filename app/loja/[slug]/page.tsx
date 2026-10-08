@@ -62,6 +62,7 @@ export default async function LojaPage({ params }: PageProps) {
 
         {/* HEADER */}
         <StoreHeaderActions
+          slug={slug}
           storeName={store.name}
           isOpen={store.is_open}
           categories={categories.map((category) => ({ id: category.id, name: category.name }))}
