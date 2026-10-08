@@ -1,5 +1,6 @@
 import Link from "next/link";
 import OrderActions from "@/app/admin/OrderActions";
+import AdminOrderRealtime from "@/app/admin/AdminOrderRealtime";
 import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
@@ -178,6 +179,10 @@ export default async function AdminPage() {
             <span>↗</span>
           </Link>
         </header>
+
+        <div className="mt-5">
+          <AdminOrderRealtime />
+        </div>
 
         {error && (
           <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
