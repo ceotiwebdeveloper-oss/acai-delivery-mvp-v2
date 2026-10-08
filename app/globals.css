@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fffaff;
+  --foreground: #24152f;
+  --acai: #552080;
+  --acai-dark: #35104f;
+  --lilac: #f3e8ff;
+  --pink: #fce7f3;
+  --muted: #796a83;
 }
 
 @theme inline {
@@ -12,15 +17,73 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Visual identity: açaí + lilac, with accessible contrast */
+.bg-zinc-100 { background-color: #f7f1fb !important; }
+.bg-zinc-50 { background-color: #fcf8ff !important; }
+.bg-zinc-900, .bg-zinc-950 { background-color: var(--acai-dark) !important; }
+.text-zinc-950, .text-zinc-900 { color: #291338 !important; }
+.text-zinc-700 { color: #5d466b !important; }
+.text-zinc-600, .text-zinc-500 { color: #796a83 !important; }
+.border-zinc-100, .border-zinc-200 { border-color: #eee2f5 !important; }
+.border-zinc-300 { border-color: #dfcde9 !important; }
+.hover\\:bg-zinc-800:hover { background-color: #552080 !important; }
+
+main {
+  animation: page-enter .45s cubic-bezier(.2,.7,.2,1) both;
+}
+
+[data-product-name] {
+  animation: card-enter .55s both;
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+  border-color: #eee2f5 !important;
+  box-shadow: 0 5px 18px rgb(72 28 100 / 5%);
+}
+[data-product-name]:hover {
+  border-color: #d6b6eb !important;
+  box-shadow: 0 12px 28px rgb(72 28 100 / 12%);
+}
+
+button, a {
+  -webkit-tap-highlight-color: transparent;
+}
+button:not(:disabled), a {
+  transition: color .2s ease, background-color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+button:active:not(:disabled), a:active {
+  transform: scale(.985);
+}
+
+input, textarea {
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+input:focus, textarea:focus {
+  box-shadow: 0 0 0 4px rgb(139 92 174 / 12%);
+}
+
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes card-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
 }
