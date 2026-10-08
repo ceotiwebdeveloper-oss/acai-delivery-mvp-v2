@@ -36,7 +36,7 @@ body {
 .text-zinc-600, .text-zinc-500 { color: #796a83 !important; }
 .border-zinc-100, .border-zinc-200 { border-color: #eee2f5 !important; }
 .border-zinc-300 { border-color: #dfcde9 !important; }
-.hover\\:bg-zinc-800:hover { background-color: #552080 !important; }
+.hover\:bg-zinc-800:hover { background-color: #552080 !important; }
 
 main {
   animation: page-enter .45s cubic-bezier(.2,.7,.2,1) both;
