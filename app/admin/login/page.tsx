@@ -6,7 +6,6 @@ import { createClient } from "@/lib/supabase/client";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const supabase = createClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -17,19 +16,34 @@ export default function AdminLoginPage() {
     setLoading(true);
     setError("");
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
-    if (error) {
-      setError("E-mail ou senha incorretos.");
+      if (!supabaseUrl || !supabaseKey) {
+        setError("Configuração do Supabase ausente. Configure NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY na Vercel.");
+        setLoading(false);
+        return;
+      }
+
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        setError("E-mail ou senha incorretos.");
+        setLoading(false);
+        return;
+      }
+
+      router.replace("/admin");
+      router.refresh();
+    } catch {
+      setError("Não foi possível conectar ao serviço de login. Verifique a configuração do Supabase e tente novamente.");
       setLoading(false);
-      return;
     }
-
-    router.replace("/admin");
-    router.refresh();
   }
 
   return (
@@ -79,7 +93,7 @@ export default function AdminLoginPage() {
           </div>
 
           {error && (
-            <div className="rounded-xl bg-red-50 px-4 py-3 text-sm font-bold text-red-700">
+            <div role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm font-bold text-red-700">
               {error}
             </div>
           )}
