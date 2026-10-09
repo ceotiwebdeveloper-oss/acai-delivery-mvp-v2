@@ -95,9 +95,9 @@ export default async function CustomerOrderPage({ params }: PageProps) {
       <div className="mx-auto max-w-2xl">
         <section className="rounded-3xl bg-white p-6 text-center shadow-sm sm:p-9">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-3xl text-emerald-700" aria-hidden="true">✓</div>
-          <p className="mt-5 text-xs font-bold uppercase tracking-[0.2em] text-emerald-700">Pedido recebido</p>
-          <h1 className="mt-2 text-3xl font-black">Obrigado, {order.customer_name}!</h1>
-          <p className="mt-3 text-sm leading-6 text-zinc-500">Seu pedido foi registrado. Guarde o número abaixo para consultar o pedido.</p>
+          <p className="mt-5 text-xs font-bold uppercase tracking-[0.2em] text-emerald-700">Acompanhe seu pedido</p>
+          <h1 className="mt-2 text-3xl font-black">Tudo certo, {order.customer_name}!</h1>
+          <p className="mt-3 text-sm leading-6 text-zinc-500">Acompanhe o andamento do pedido nesta página. O status será atualizado automaticamente.</p>
           <p className="mt-5 break-all rounded-xl bg-zinc-50 px-4 py-3 font-mono text-xs text-zinc-600">{order.id}</p>
           <div className="mt-5 inline-flex rounded-full bg-orange-50 px-4 py-2 text-sm font-bold text-orange-800">Status: {statusLabels[order.status] ?? order.status}</div>
         </section>
