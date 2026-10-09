@@ -76,6 +76,7 @@ export default function StoreHeaderActions({ storeName, slug, isOpen, categories
           {categories.map((category) => (
             <a key={category.id} onClick={() => setMenuOpen(false)} href={`#categoria-${category.id}`} className="store-menu-link">{category.name}</a>
           ))}
+          <a onClick={() => setMenuOpen(false)} href={`/loja/${slug}/conta`} className="store-menu-link">Minha conta</a>
           <a onClick={() => setMenuOpen(false)} href={`/loja/${slug}/carrinho`} className="store-menu-link store-menu-cart">Meu carrinho <span aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
         </nav>
       </div>
