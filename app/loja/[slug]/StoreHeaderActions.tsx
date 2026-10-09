@@ -30,54 +30,67 @@ export default function StoreHeaderActions({ storeName, slug, isOpen, categories
   }
 
   return (
-    <header className="sticky top-0 z-20 border-b bg-white/95 px-5 py-4 backdrop-blur">
+    <header className="sticky top-0 z-20 border-b border-[#eee4f3] bg-white/95 px-5 py-3 backdrop-blur-xl">
       <div className="flex items-center justify-between">
         <button
           type="button"
           onClick={() => { setMenuOpen((open) => !open); setSearchOpen(false); }}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-lg text-white shadow-sm transition hover:bg-zinc-800"
+          className={`menu-toggle ${menuOpen ? "is-open" : ""}`}
           aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
           aria-expanded={menuOpen}
-        >☰</button>
+          aria-controls="store-navigation-panel"
+        >
+          <span className="menu-toggle-lines" aria-hidden="true">
+            <span /><span /><span />
+          </span>
+        </button>
         <div className="text-center">
-          <h1 className="text-sm font-bold text-zinc-900">{storeName}</h1>
+          <h1 className="text-sm font-bold text-[#32103f]">{storeName}</h1>
           <div className="mt-1 flex items-center justify-center gap-1.5">
             <span className={`h-2 w-2 rounded-full ${isOpen ? "bg-emerald-500" : "bg-red-500"}`} />
-            <span className="text-xs text-zinc-500">{isOpen ? "Aberta agora" : "Fechada"}</span>
+            <span className="text-xs text-[#806d88]">{isOpen ? "Aberta agora" : "Fechada"}</span>
           </div>
         </div>
         <button
           type="button"
           onClick={() => { setSearchOpen((open) => !open); setMenuOpen(false); }}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-900 text-lg text-white shadow-sm transition hover:bg-zinc-800"
+          className="menu-toggle"
           aria-label={searchOpen ? "Fechar pesquisa" : "Pesquisar"}
           aria-expanded={searchOpen}
-        >⌕</button>
+        >
+          <span className="text-[25px] leading-none" aria-hidden="true">{searchOpen ? "×" : "⌕"}</span>
+        </button>
       </div>
-      {menuOpen && (
-        <nav aria-label="Menu da loja" className="mt-4 rounded-2xl border border-zinc-200 bg-white p-3 text-zinc-950 shadow-lg">
-          <a onClick={() => setMenuOpen(false)} href="#inicio" className="block rounded-xl px-3 py-2 text-sm font-medium text-zinc-950 hover:bg-zinc-100">Início</a>
-          <p className="px-3 pb-1 pt-3 text-xs font-semibold uppercase tracking-wide text-zinc-700">Categorias</p>
+
+      <div
+        id="store-navigation-panel"
+        aria-label="Menu da loja"
+        aria-hidden={!menuOpen}
+        className={`store-menu-panel ${menuOpen ? "is-open" : ""}`}
+      >
+        <nav className="store-menu-inner">
+          <a onClick={() => setMenuOpen(false)} href="#inicio" className="store-menu-link">Início</a>
+          <p className="store-menu-heading">Categorias</p>
           {categories.map((category) => (
-            <a key={category.id} onClick={() => setMenuOpen(false)} href={`#categoria-${category.id}`} className="block rounded-xl px-3 py-2 text-sm text-zinc-950 hover:bg-zinc-100">{category.name}</a>
+            <a key={category.id} onClick={() => setMenuOpen(false)} href={`#categoria-${category.id}`} className="store-menu-link">{category.name}</a>
           ))}
-          <a onClick={() => setMenuOpen(false)} href={`/loja/${slug}/carrinho`} className="mt-2 block rounded-xl px-3 py-2 text-sm font-medium text-zinc-950 hover:bg-zinc-100">Meu carrinho</a>
+          <a onClick={() => setMenuOpen(false)} href={`/loja/${slug}/carrinho`} className="store-menu-link store-menu-cart">Meu carrinho <span aria-hidden="true">→</span></a>
         </nav>
-      )}
-      {searchOpen && (
-        <div className="mt-4">
-          <label htmlFor="store-product-search" className="mb-2 block text-xs font-medium text-zinc-500">Buscar produtos</label>
-          <input
-            id="store-product-search"
-            autoFocus
-            value={query}
-            onChange={(event) => searchProducts(event.target.value)}
-            placeholder="Ex.: açaí, morango..."
-            className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 outline-none focus:border-zinc-500"
-          />
-          {query && <button type="button" onClick={() => searchProducts("")} className="mt-2 text-xs font-medium text-zinc-600 underline">Limpar pesquisa</button>}
-        </div>
-      )}
+      </div>
+
+      <div className={`store-search-panel ${searchOpen ? "is-open" : ""}`} aria-hidden={!searchOpen}>
+        <label htmlFor="store-product-search" className="mb-2 block text-xs font-medium text-[#806d88]">Buscar produtos</label>
+        <input
+          id="store-product-search"
+          autoFocus={searchOpen}
+          tabIndex={searchOpen ? 0 : -1}
+          value={query}
+          onChange={(event) => searchProducts(event.target.value)}
+          placeholder="Ex.: açaí, morango..."
+          className="w-full rounded-xl border border-[#e7d8ef] bg-[#fcf8ff] px-4 py-3 text-sm text-[#32103f] outline-none focus:border-[#a45cc2]"
+        />
+        {query && <button type="button" onClick={() => searchProducts("")} className="mt-2 text-xs font-medium text-[#806d88] underline">Limpar pesquisa</button>}
+      </div>
     </header>
   );
 }
