@@ -15,7 +15,7 @@ function optionPhoto(name: string) {
   if (value.includes("cupua")) return "https://images.unsplash.com/photo-1505252585461-04db1eb84625?auto=format&fit=crop&w=240&q=80";
   if (value.includes("morango") || value.includes("morango")) return "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=240&q=80";
   if (value.includes("banana")) return "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=240&q=80";
-  if (value.includes("granola")) return "https://images.unsplash.com/photo-1517093157656-b9ec娱乐招商?auto=format&fit=crop&w=240&q=80".replace("b9ec%E5%95%86","b9ec");
+  if (value.includes("granola")) return "https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?auto=format&fit=crop&w=240&q=80";
   if (value.includes("chocolate") || value.includes("choc")) return "https://images.unsplash.com/photo-1511381939415-e44015466834?auto=format&fit=crop&w=240&q=80";
   if (value.includes("leite em pó") || value.includes("leite ninho")) return "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=240&q=80";
   if (value.includes("baunilha") || value.includes("creme")) return "https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=240&q=80";
