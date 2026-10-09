@@ -58,7 +58,9 @@ export default function StoreHeaderActions({ storeName, slug, isOpen, categories
           aria-label={searchOpen ? "Fechar pesquisa" : "Pesquisar"}
           aria-expanded={searchOpen}
         >
-          <span className="text-[25px] leading-none" aria-hidden="true">{searchOpen ? "×" : "⌕"}</span>
+          <span className="flex items-center justify-center" aria-hidden="true">
+            {searchOpen ? <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg> : <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>}
+          </span>
         </button>
       </div>
 
@@ -74,7 +76,7 @@ export default function StoreHeaderActions({ storeName, slug, isOpen, categories
           {categories.map((category) => (
             <a key={category.id} onClick={() => setMenuOpen(false)} href={`#categoria-${category.id}`} className="store-menu-link">{category.name}</a>
           ))}
-          <a onClick={() => setMenuOpen(false)} href={`/loja/${slug}/carrinho`} className="store-menu-link store-menu-cart">Meu carrinho <span aria-hidden="true">→</span></a>
+          <a onClick={() => setMenuOpen(false)} href={`/loja/${slug}/carrinho`} className="store-menu-link store-menu-cart">Meu carrinho <span aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
         </nav>
       </div>
 
