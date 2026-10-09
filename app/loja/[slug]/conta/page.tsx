@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
+export const instant = false;
+
 function normalizePhone(value: string) {
   const digits = value.replace(/\D/g, "");
   if (digits.startsWith("55") && digits.length >= 12) return `+${digits}`;
