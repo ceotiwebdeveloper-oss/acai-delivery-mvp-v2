@@ -37,7 +37,7 @@ export default async function LojaPage({ params }: PageProps) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#f8f4fa] px-5">
         <div className="rounded-3xl bg-white p-10 text-center shadow-xl">
-          <span className="text-5xl">🍧</span>
+          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f6eafa] text-[#8c26b4]" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M5 9h14l-1.5 10h-11L5 9Z"/><path d="M4 9c0-2 2-3 4-2 1-3 5-3 6 0 2-1 5 0 5 2"/><path d="M9 5c-.8-1-.5-2 .3-2.8M14 5c.8-.8.8-1.8.2-2.5"/></svg></span>
           <h1 className="mt-4 text-xl font-black text-[#32103f]">Loja não encontrada</h1>
           <p className="mt-2 text-sm text-[#806d88]">Confira o endereço e tente novamente.</p>
         </div>
@@ -79,7 +79,7 @@ export default async function LojaPage({ params }: PageProps) {
                 Ver cardápio <span aria-hidden="true" className="text-lg">→</span>
               </a>
               <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold text-white/70">
-                <span>♡ Feito com carinho</span><span>✦ Ingredientes selecionados</span><span>♧ Sabor de verdade</span>
+                <span className="inline-flex items-center gap-1.5"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>Feito com carinho</span><span className="inline-flex items-center gap-1.5"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg>Ingredientes selecionados</span><span className="inline-flex items-center gap-1.5"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 21s-7-4.3-7-11a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 7-7 11-7 11Z"/><path d="M12 7v8m-3-4h6"/></svg>Sabor de verdade</span>
               </div>
             </div>
             <div className="relative mx-auto w-full max-w-lg md:py-4">
@@ -113,7 +113,7 @@ export default async function LojaPage({ params }: PageProps) {
             { icon: "⌁", title: "Peça sem complicação", sub: "Escolha seus favoritos" },
           ].map((item) => (
             <div key={item.title} className="flex flex-col items-center gap-1 text-center sm:flex-row sm:justify-center sm:gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#f6eafa] text-xl text-[#8c26b4]">{item.icon}</span>
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#f6eafa] text-[#8c26b4]" aria-hidden="true">{item.icon === "✦" ? <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/></svg> : item.icon === "♡" ? <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg> : <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M12 21s-7-4.3-7-11a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 7-7 11-7 11Z"/><path d="M12 7v8m-3-4h6"/></svg>}</span>
               <div><p className="text-xs font-extrabold sm:text-sm">{item.title}</p><p className="mt-1 hidden text-[11px] text-[#8b7a92] sm:block">{item.sub}</p></div>
             </div>
           ))}
