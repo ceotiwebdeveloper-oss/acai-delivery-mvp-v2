@@ -50,6 +50,8 @@ export default function CartBar({ slug }: Props) {
   const itemCount = cart.reduce((sum, item) => sum + Number(item.quantity), 0);
   const total = cart.reduce((sum, item) => sum + Number(item.total), 0);
 
+  if (itemCount === 0) return null;
+
   return (
     <div className="cart-bar-fixed">
       <Link
