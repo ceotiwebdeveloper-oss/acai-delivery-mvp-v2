@@ -21,7 +21,7 @@ type PageProps = {
 };
 
 function formatPhone(value: string) {
-  const numbers = value.replace(/\D/g, "").slice(0, 11);
+  const numbers = value.replace(/\D/g, "").replace(/^55(?=\d{10,11}$)/, "").slice(0, 11);
 
   if (numbers.length <= 2) {
     return numbers.length ? `(${numbers}` : "";
@@ -76,6 +76,28 @@ export default function CheckoutPage({ params }: PageProps) {
       window.clearTimeout(timer);
     };
   }, [params]);
+
+  useEffect(() => {
+    let active = true;
+    const supabase = createClient();
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (!active || !data.user) return;
+      const { data: profile } = await supabase
+        .from("customer_profiles")
+        .select("full_name, phone")
+        .eq("user_id", data.user.id)
+        .maybeSingle();
+      if (!active) return;
+      if (profile) {
+        setName(profile.full_name);
+        setPhone(formatPhone(profile.phone));
+      } else {
+        if (data.user.user_metadata?.full_name) setName(String(data.user.user_metadata.full_name));
+        if (data.user.phone) setPhone(formatPhone(data.user.phone));
+      }
+    });
+    return () => { active = false; };
+  }, []);
 
   const subtotal = useMemo(
     () => cart.reduce((sum, item) => sum + Number(item.total), 0),
