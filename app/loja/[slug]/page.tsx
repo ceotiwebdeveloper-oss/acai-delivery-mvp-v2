@@ -45,7 +45,7 @@ export default async function LojaPage({ params }: PageProps) {
     );
   }
 
-  const categories = [...(store.categories ?? [])].sort((a, b) => a.position - b.position);
+  const categories = [...(store.categories ?? [])].filter((category) => !category.name.toLocaleLowerCase("pt-BR").includes("adicionais")).sort((a, b) => a.position - b.position);
   let fallbackIndex = 0;
 
   return (
