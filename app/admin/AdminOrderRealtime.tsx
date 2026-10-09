@@ -10,11 +10,13 @@ export default function AdminOrderRealtime() {
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined" || !("Notification" in window)) {
-      setPermission("unsupported");
-    } else {
-      setPermission(Notification.permission);
-    }
+    const permissionTimer = window.setTimeout(() => {
+      if (!("Notification" in window)) {
+        setPermission("unsupported");
+      } else {
+        setPermission(Notification.permission);
+      }
+    }, 0);
 
     const supabase = createClient();
     const channel = supabase
@@ -40,6 +42,7 @@ export default function AdminOrderRealtime() {
       .subscribe((status) => setConnected(status === "SUBSCRIBED"));
 
     return () => {
+      window.clearTimeout(permissionTimer);
       void supabase.removeChannel(channel);
     };
   }, [router]);
