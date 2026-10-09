@@ -57,7 +57,9 @@ export default function CartBar({ slug }: Props) {
         className="cart-bar-link"
         aria-label={`Abrir carrinho: ${itemCount} ${itemCount === 1 ? "item" : "itens"}, total R$ ${total.toFixed(2).replace(".", ",")}`}
       >
-        <span className="cart-bar-icon" aria-hidden="true">🛒</span>
+        <span className="cart-bar-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3h2l2.4 12.2a2 2 0 0 0 2 1.6h8.9a2 2 0 0 0 1.9-1.5L22 8H6"/><circle cx="10" cy="21" r="1"/><circle cx="19" cy="21" r="1"/></svg>
+        </span>
         <span className="cart-bar-copy">
           <span className="cart-bar-title">Meu carrinho</span>
           <span className="cart-bar-count" aria-live="polite">
