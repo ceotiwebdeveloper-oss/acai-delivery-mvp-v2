@@ -195,12 +195,12 @@ input:focus, textarea:focus {
 /* Viewport-fixed cart, including mobile safe-area spacing. */
 .cart-bar-fixed {
   position: fixed;
-  right: 0;
-  bottom: max(12px, env(safe-area-inset-bottom));
-  left: 0;
+  right: max(20px, env(safe-area-inset-right));
+  bottom: max(20px, env(safe-area-inset-bottom));
+  left: auto;
   z-index: 50;
-  width: min(440px, calc(100% - 28px));
-  margin-inline: auto;
+  width: min(360px, calc(100% - 28px));
+  margin-inline: 0;
   padding-bottom: env(safe-area-inset-bottom);
   animation: cart-arrive .38s cubic-bezier(.2,.8,.2,1) both;
 }
