@@ -125,8 +125,9 @@ export default async function ManageOrderPage({ params }: Props) {
           <div>
             <Link href={`/admin/pedidos/${safeOrder.id}/visualizar`} className="text-sm font-semibold text-zinc-500 hover:text-zinc-950">← Voltar às informações do pedido</Link>
             <h1 className="mt-3 text-3xl font-black tracking-tight text-zinc-950">Gerenciar pedido</h1>
-            <p className="mt-1 text-sm text-zinc-500">Pedido de {safeOrder.customer_name} · {new Date(safeOrder.created_at).toLocaleString("pt-BR")}</p>
+            <p className="mt-1 text-sm text-zinc-500">Pedido de {safeOrder.customer_name} · {new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short", timeZone: "America/Sao_Paulo" }).format(new Date(safeOrder.created_at))}</p>
           </div>
+          <a href={`https://wa.me/55169992445413?text=${encodeURIComponent(["TESTE DE PEDIDO — Açaí Delivery", `Pedido: ${safeOrder.id}`, `Cliente: ${safeOrder.customer_name}`, `Telefone: ${safeOrder.customer_phone}`, `Tipo: ${safeOrder.delivery_type === "delivery" ? "Entrega" : "Retirada"}`, safeOrder.delivery_type === "delivery" ? `Endereço: ${safeOrder.address || ""}, ${safeOrder.address_number || ""} ${safeOrder.complement || ""}`.trim() : "", `Pagamento: ${paymentLabels[safeOrder.payment_method] ?? safeOrder.payment_method}`, `Status: ${statusLabels[safeOrder.status] ?? safeOrder.status}`, "Itens:", ...safeItems.map((item) => `- ${item.quantity}x ${item.product_name}: ${money(item.total)}`), `Subtotal: ${money(safeOrder.subtotal)}`, `Entrega: ${money(safeOrder.delivery_fee)}`, `TOTAL: ${money(safeOrder.total)}`, safeOrder.notes ? `Observações: ${safeOrder.notes}` : ""].filter(Boolean).join("\n"))}`} target="_blank" rel="noreferrer" className="inline-flex w-fit items-center justify-center rounded-xl bg-emerald-600 px-4 py-3 text-sm font-bold text-white hover:bg-emerald-700">Enviar teste pelo WhatsApp</a>
           <Link href="/admin" className="inline-flex w-fit rounded-xl bg-white px-4 py-3 text-sm font-bold text-zinc-700 ring-1 ring-zinc-200 hover:bg-zinc-50">Lista de pedidos</Link>
         </header>
 
