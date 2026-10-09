@@ -51,19 +51,21 @@ export default function CartBar({ slug }: Props) {
   const total = cart.reduce((sum, item) => sum + Number(item.total), 0);
 
   return (
-    <div className="fixed bottom-4 left-1/2 z-30 w-[calc(100%-32px)] max-w-md -translate-x-1/2">
+    <div className="cart-bar-fixed">
       <Link
         href={`/loja/${slug}/carrinho`}
-        className="flex w-full items-center justify-between rounded-2xl bg-zinc-950 px-5 py-4 text-white shadow-xl transition hover:bg-zinc-800"
+        className="cart-bar-link"
+        aria-label={`Abrir carrinho: ${itemCount} ${itemCount === 1 ? "item" : "itens"}, total R$ ${total.toFixed(2).replace(".", ",")}`}
       >
-        <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10" aria-hidden="true">🛒</span>
-          <div className="text-left">
-            <p className="text-sm font-semibold">Seu carrinho</p>
-            <p className="text-xs text-zinc-400">{itemCount} {itemCount === 1 ? "item" : "itens"}</p>
-          </div>
-        </div>
-        <span className="text-sm font-semibold">R$ {total.toFixed(2).replace(".", ",")}</span>
+        <span className="cart-bar-icon" aria-hidden="true">🛒</span>
+        <span className="cart-bar-copy">
+          <span className="cart-bar-title">Meu carrinho</span>
+          <span className="cart-bar-count" aria-live="polite">
+            {itemCount === 0 ? "Seu pedido começa aqui" : `${itemCount} ${itemCount === 1 ? "item" : "itens"} no pedido`}
+          </span>
+        </span>
+        <span className="cart-bar-total">R$ {total.toFixed(2).replace(".", ",")}</span>
+        <span className="cart-bar-arrow" aria-hidden="true">→</span>
       </Link>
     </div>
   );
