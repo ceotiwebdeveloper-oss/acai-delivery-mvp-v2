@@ -56,7 +56,7 @@ export default function CustomerAccountPage() {
   async function sendCode() {
     setError("");
     setMessage("");
-    if (name.trim().length < 2 || phone.replace(/\D/g, "").replace(/^55/, "").length < 10 || !birthDate) {
+    if (name.trim().length < 2 || phone.replace(/\D/g, "").replace(/^55(?=\d{10,11}$)/, "").length < 10 || !birthDate) {
       setError("Preencha nome, telefone e data de nascimento.");
       return;
     }
