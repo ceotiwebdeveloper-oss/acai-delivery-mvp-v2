@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import OrderTracking from "./OrderTracking";
 
 export const instant = false;
 
@@ -100,6 +101,10 @@ export default async function CustomerOrderPage({ params }: PageProps) {
           <p className="mt-5 break-all rounded-xl bg-zinc-50 px-4 py-3 font-mono text-xs text-zinc-600">{order.id}</p>
           <div className="mt-5 inline-flex rounded-full bg-orange-50 px-4 py-2 text-sm font-bold text-orange-800">Status: {statusLabels[order.status] ?? order.status}</div>
         </section>
+
+        <div className="mt-5">
+          <OrderTracking orderId={order.id} currentStatus={order.status} />
+        </div>
 
         <section className="mt-5 rounded-3xl bg-white p-6 shadow-sm">
           <h2 className="text-lg font-black">Resumo do pedido</h2>
