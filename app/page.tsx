@@ -8,7 +8,7 @@ export default function Home() {
 
       <div className="relative w-full max-w-md overflow-hidden rounded-[2rem] border border-white/80 bg-white/90 p-8 text-center shadow-2xl shadow-purple-950/10 backdrop-blur">
         <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-[1.75rem] bg-gradient-to-br from-violet-700 via-purple-700 to-fuchsia-600 text-4xl shadow-lg shadow-purple-900/20">
-          🍧
+          <svg aria-hidden="true" viewBox="0 0 64 64" className="h-12 w-12" fill="none">\n            <path d="M13 20h38l-4 31H17l-4-31Z" fill="white" fillOpacity=".96" />\n            <path d="M13 20h38l-4 31H17l-4-31Z" stroke="#6D28D9" strokeWidth="2.5" strokeLinejoin="round" />\n            <path d="M18 25h28l-3 22H21l-3-22Z" fill="#7C3AED" />\n            <path d="M20 29c6-5 12 5 18 0s7 1 8 2l-3 16H21l-1-18Z" fill="#C084FC" />\n            <path d="M19 16c0-4 4-7 8-7 2-5 10-5 12 0 5 0 8 3 8 7v4H19v-4Z" fill="#F5D0FE" stroke="#6D28D9" strokeWidth="2.5" strokeLinejoin="round" />\n            <path d="M28 12c-2 3-2 5 0 7m8-8c-2 3-2 5 0 7" stroke="#A21CAF" strokeWidth="2" strokeLinecap="round" />\n            <path d="M25 33h14" stroke="white" strokeWidth="2" strokeLinecap="round" />\n          </svg>
         </div>
 
         <p className="mb-3 text-xs font-extrabold uppercase tracking-[0.24em] text-purple-700">
