@@ -1,15 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 type Props = { orderId: string };
 
+function normalizeBrazilianPhone(value: string) {
+  let digits = value.replace(/\\D/g, "");
+  if (digits.startsWith("55") && (digits.length === 12 || digits.length === 13)) {
+    digits = digits.slice(2);
+  }
+  if (digits.length < 10 || digits.length > 11) return "";
+  return `55${digits}`;
+}
+
 export default function OrderActions({ orderId }: Props) {
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
+  const [phone, setPhone] = useState("");
+
+  useEffect(() => {
+    let active = true;
+    const supabase = createClient();
+    supabase
+      .from("orders")
+      .select("customer_phone, customer_name")
+      .eq("id", orderId)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (active && data?.customer_phone) setPhone(normalizeBrazilianPhone(data.customer_phone));
+      });
+    return () => { active = false; };
+  }, [orderId]);
 
   async function deleteOrder() {
     if (deleting) return;
@@ -45,6 +69,16 @@ export default function OrderActions({ orderId }: Props) {
       >
         VER INFORMAÇÕES <span aria-hidden="true">→</span>
       </a>
+      {phone && (
+        <a
+          href={`https://wa.me/${phone}?text=${encodeURIComponent("Olá! Estou entrando em contato sobre seu pedido na Sorveteria Água na Boca.")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-800 hover:bg-emerald-100"
+        >
+          WhatsApp <span aria-hidden="true">↗</span>
+        </a>
+      )}
       <button
         type="button"
         onClick={deleteOrder}
